@@ -17,7 +17,11 @@ export default function(that, target) {
 
 function locateTest(suite, testName) {
 	let matchingTest;
-	let fullTitleToMatch = suite.fullTitle() + " " + testName.replace(new RegExp(SUITE_TARGET_SEPARATOR, 'g'), ' ');
+	let fullTitleToMatch = testName.replace(new RegExp(SUITE_TARGET_SEPARATOR, 'g'), ' ');
+	
+	if (testName.indexOf(SUITE_TARGET_SEPARATOR) === -1) {
+		fullTitleToMatch = suite.fullTitle() + " " + fullTitleToMatch;
+	}
 	
 	suite.eachTest((theTest) => {
 		if (theTest.fullTitle() === fullTitleToMatch) {
