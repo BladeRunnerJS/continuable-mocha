@@ -36,7 +36,7 @@ describe("ContinueFrom", function() {
 		expect(nextTestCalled()).to.equal(currentTestName(this));
 	});
 	
-	it("can continue from a test by using its fully suite and test name", function() { 
+	it("can continue from a test by using its full suite and test name", function() { 
 		continueFrom(this, "ContinueFrom::dummy test 1");
 		recordTest(this);
 		
@@ -58,8 +58,8 @@ describe("ContinueFrom", function() {
 	
 	it("will throw an error if a test continues from a test that is ignored", function() {
 		expect(
-			continueFrom.bind(undefined, this, "ContinueFrom::thing that does not exist")
-		).to.throw("Unable to find the test 'ContinueFrom::thing that does not exist'");
+			continueFrom.bind(undefined, this, "ContinueFrom::ignored dummy test 1")
+		).to.throw("Found the test 'ContinueFrom::ignored dummy test 1', but it was ignored. Used the continues from 'xit' function instead.");
 	});
 	
 	it("can continue from an ignored test by using the continuesFrom xit function", function() { 
@@ -74,6 +74,39 @@ describe("ContinueFrom", function() {
 		recordTest(this);
 		expect(firstTestCalled()).to.equal("ContinueFrom ignored dummy test 3 using continueFrom_xit");
 		expect(nextTestCalled()).to.equal(currentTestName(this));
+	});
+	
+	describe("nested suite", function() {
+		
+		it("can continue from a test in another suite by its test name only", function() { 
+			continueFrom(this, "dummy test 1");
+			recordTest(this);
+			
+			expect(firstTestCalled()).to.equal("ContinueFrom dummy test 1");
+			expect(nextTestCalled()).to.equal(currentTestName(this));
+		});
+		
+		it("can continue from a test in another suite by using its full suite and test name", function() { 
+			continueFrom(this, "ContinueFrom::dummy test 1");
+			recordTest(this);
+			
+			expect(firstTestCalled()).to.equal("ContinueFrom dummy test 1");
+			expect(nextTestCalled()).to.equal(currentTestName(this));
+		});
+	
+		it("will throw an error for an ignored test test in another suite", function() { 
+			expect(
+				continueFrom.bind(undefined, this, "ContinueFrom::ignored dummy test 1")
+			).to.throw("Found the test 'ContinueFrom::ignored dummy test 1', but it was ignored. Used the continues from 'xit' function instead.");
+		});
+	
+		it("can continue from an ignored test in another suite by using the continuesFrom xit function with the absolute test name", function() {
+			continueFrom(this, "ContinueFrom::ignored dummy test 3 using continueFrom_xit");
+			recordTest(this);
+			expect(firstTestCalled()).to.equal("ContinueFrom ignored dummy test 3 using continueFrom_xit");
+			expect(nextTestCalled()).to.equal(currentTestName(this));
+		});
+		
 	});
 	
 	/* utils */

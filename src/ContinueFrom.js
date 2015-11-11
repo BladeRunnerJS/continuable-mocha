@@ -7,10 +7,15 @@ import getGlobal from 'get-global';
 
 export default function(theTest, target) {
 	let suite = theTest.test.parent;
-	let matchingTest = locateTest(suite, target);
+	let rootSuite = findRootSuite(suite);
+	let matchingTest = locateTest(rootSuite, target);
 	
 	if (matchingTest == undefined) {
-		throw new Error( sprintf("Unable to find the test '%s'", target, suite.fullTitle()) );
+		throw new Error( sprintf("Unable to find the test '%s'", target) );
+	}
+	
+	if (!matchingTest.fn) {
+		throw new Error( sprintf( "Found the test '%s', but it was ignored. Used the continues from 'xit' function instead.", target) );
 	}
 	
 	let oldContextTest = suite.ctx.test;
@@ -36,9 +41,20 @@ function locateTest(suite, testName) {
 	}
 	
 	suite.eachTest((theTest) => {
+		if (matchingTest !== undefined) {
+			return;
+		}
+		
 		if (theTest.fullTitle() === fullTitleToMatch) {
 			matchingTest = theTest;
 		}
 	});
 	return matchingTest;
+}
+
+function findRootSuite(suite) {
+	while(suite.parent && !suite.parent.root) {
+		suite = suite.parent;
+	}
+	return suite;
 }
