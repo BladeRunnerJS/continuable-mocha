@@ -3,12 +3,11 @@
 let SUITE_TARGET_SEPARATOR = "::";
 
 import sprintf from 'sprintf';
+import getGlobal from 'get-global';
 
-export default function(that, target) {
-	let suite = that.test.parent;
+export default function(theTest, target) {
+	let suite = theTest.test.parent;
 	let matchingTest = locateTest(suite, target);
-	
-	console.log(matchingTest);
 	
 	if (matchingTest == undefined) {
 		throw new Error( sprintf("Unable to find the test '%s'", target, suite.fullTitle()) );
@@ -21,6 +20,11 @@ export default function(that, target) {
 	} finally {
 		matchingTest.ctx.test = oldContextTest;
 	}
+}
+
+export function xit(suite, testName, fn) {
+	getGlobal().xit(testName, fn);
+	locateTest(suite, testName).fn = fn;
 }
 
 function locateTest(suite, testName) {

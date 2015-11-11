@@ -1,7 +1,7 @@
 /* global describe, xdescribe, beforeEach, afterEach, it, xit */
 'use strict';
 
-import continueFrom from '../src/ContinueFrom';
+import continueFrom, {xit as continueFrom_xit} from '../src/ContinueFrom';
 
 import chai from 'chai';
 let expect = chai.expect;
@@ -21,6 +21,11 @@ describe("ContinueFrom", function() {
 	xit("ignored dummy test 1", function() {
 		recordTest(this);
 	});
+	
+	continueFrom_xit(this, "ignored dummy test 3 using continueFrom_xit", function() {
+		recordTest(this);
+	});
+	
 	
 	/* start functionality tests */
 	it("can continue from a test by its test name only", function() { 
@@ -55,6 +60,20 @@ describe("ContinueFrom", function() {
 		expect(
 			continueFrom.bind(undefined, this, "ContinueFrom::thing that does not exist")
 		).to.throw("Unable to find the test 'ContinueFrom::thing that does not exist'");
+	});
+	
+	it("can continue from an ignored test by using the continuesFrom xit function", function() { 
+		continueFrom(this, "ignored dummy test 3 using continueFrom_xit");
+		recordTest(this);
+		expect(firstTestCalled()).to.equal("ContinueFrom ignored dummy test 3 using continueFrom_xit");
+		expect(nextTestCalled()).to.equal(currentTestName(this));
+	});
+	
+	it("can continue from an ignored test by using the continuesFrom xit function with the absolute test name", function() {
+		continueFrom(this, "ContinueFrom::ignored dummy test 3 using continueFrom_xit");
+		recordTest(this);
+		expect(firstTestCalled()).to.equal("ContinueFrom ignored dummy test 3 using continueFrom_xit");
+		expect(nextTestCalled()).to.equal(currentTestName(this));
 	});
 	
 	/* utils */

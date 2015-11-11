@@ -32,6 +32,7 @@
     "mkdirp": "^0.5.1"
   },
   "dependencies": {
+    "get-global": "0.0.1",
     "mocha": "^2.2.5",
     "sprintf": "^0.1.5"
   }
