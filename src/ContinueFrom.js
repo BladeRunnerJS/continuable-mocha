@@ -1,10 +1,18 @@
 // multiple nested describes
 
 let SUITE_TARGET_SEPARATOR = "::";
-	
+
+import sprintf from 'sprintf';
+
 export default function(that, target) {
 	let suite = that.test.parent;
 	let matchingTest = locateTest(suite, target);
+	
+	console.log(matchingTest);
+	
+	if (matchingTest == undefined) {
+		throw new Error( sprintf("Unable to find the test '%s'", target, suite.fullTitle()) );
+	}
 	
 	let oldContextTest = suite.ctx.test;
 	try {

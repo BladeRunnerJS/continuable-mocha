@@ -32,6 +32,7 @@
     "mkdirp": "^0.5.1"
   },
   "dependencies": {
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "sprintf": "^0.1.5"
   }
 }

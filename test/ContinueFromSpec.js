@@ -18,6 +18,10 @@ describe("ContinueFrom", function() {
 		recordTest(this);
 	});
 	
+	xit("ignored dummy test 1", function() {
+		recordTest(this);
+	});
+	
 	/* start functionality tests */
 	it("can continue from a test by its test name only", function() { 
 		continueFrom(this, "dummy test 1");
@@ -33,6 +37,24 @@ describe("ContinueFrom", function() {
 		
 		expect(firstTestCalled()).to.equal("ContinueFrom dummy test 1");
 		expect(nextTestCalled()).to.equal(currentTestName(this));
+	});
+	
+	it("will throw an error if the test cannot be found using the test name", function() {
+		expect(
+			continueFrom.bind(undefined, this, "thing that does not exist")
+		).to.throw("Unable to find the test 'thing that does not exist'");
+	});
+	
+	it("will throw an error if the test cannot be found using the suite and test name", function() {
+		expect(
+			continueFrom.bind(undefined, this, "ContinueFrom::thing that does not exist")
+		).to.throw("Unable to find the test 'ContinueFrom::thing that does not exist'");
+	});
+	
+	it("will throw an error if a test continues from a test that is ignored", function() {
+		expect(
+			continueFrom.bind(undefined, this, "ContinueFrom::thing that does not exist")
+		).to.throw("Unable to find the test 'ContinueFrom::thing that does not exist'");
 	});
 	
 	/* utils */
