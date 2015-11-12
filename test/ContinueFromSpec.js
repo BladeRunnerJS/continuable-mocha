@@ -42,6 +42,10 @@ describe('ContinueFrom', function() {
 		recordTest(this);
 	});
 
+	var requiredContinueFromXit = require('../src/ContinueFrom').xit;
+	requiredContinueFromXit(this, 'ignored dummy test 3 using requiredContinueFromXit', function() {
+		recordTest(this);
+	});
 
 	/* start functionality tests */
 	it('can continue from a test by its test name only', function() {
@@ -89,6 +93,13 @@ describe('ContinueFrom', function() {
 		continueFrom(this, 'ContinueFrom::ignored dummy test 3 using continueFromXit');
 		recordTest(this);
 		expect(firstTestCalled()).to.equal('ContinueFrom ignored dummy test 3 using continueFromXit');
+		expect(nextTestCalled()).to.equal(currentTestName(this));
+	});
+
+	it('can continue from an ignored test by using the required version of continuesFrom xit function', function() {
+		continueFrom(this, 'ContinueFrom::ignored dummy test 3 using requiredContinueFromXit');
+		recordTest(this);
+		expect(firstTestCalled()).to.equal('ContinueFrom ignored dummy test 3 using requiredContinueFromXit');
 		expect(nextTestCalled()).to.equal(currentTestName(this));
 	});
 
