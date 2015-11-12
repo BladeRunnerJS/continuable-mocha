@@ -1,11 +1,8 @@
-/* global describe, xdescribe, beforeEach, afterEach, it, xit */
-
 import continueFrom, {xit as continueFromXit} from '../src/ContinueFrom';
 
 import chai from 'chai';
 
 let expect = chai.expect;
-
 
 describe('ContinueFrom', function() {
 
