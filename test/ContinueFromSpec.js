@@ -42,7 +42,9 @@ describe('ContinueFrom', function() {
 		recordTest(this);
 	});
 
+	/*eslint-env node */
 	var requiredContinueFromXit = require('../src/ContinueFrom').xit;
+	/*eslint-env es6, mocha */
 	requiredContinueFromXit(this, 'ignored dummy test 3 using requiredContinueFromXit', function() {
 		recordTest(this);
 	});
