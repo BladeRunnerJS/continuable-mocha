@@ -10,9 +10,9 @@ const GLOBAL = getGlobal();
 
 let ignoredSuiteTests = [];
 
-Mocha.Context.prototype.continueFrom = function(target) {
+let continueFrom = function(target) {
 	let theTest = this;
-	let suite = theTest.test.parent;
+	let suite = theTest.parent;
 	let rootSuite = findRootSuite(suite);
 	let matchingTest = locateTest(rootSuite, target);
 
@@ -49,6 +49,14 @@ GLOBAL.describe = function describe(suiteName, fn) {
 	thisSuiteIgnoredTests.forEach((testFn, testName) => {
 		locateTest(suite, testName).fn = testFn;
 	});
+
+	suite.beforeEach(function() {
+		GLOBAL.continueFrom = continueFrom.bind(this.test);
+	});
+	suite.afterEach(function() {
+		delete GLOBAL.continueFrom;
+	});
+
 
 	return suite;
 };
