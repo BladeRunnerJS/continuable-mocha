@@ -2,6 +2,8 @@
 
 A small library that allows one Mocha test to 'continue from' another.
 
+​_continues-from_​ may be considered an anti-pattern by some, since you can use `beforeEach` within nested `define` blocks to get your tests into the correct state, but we find it useful when porting pre-BDD tests.
+
 ## Usage
 
 Require the `continueable-mocha` library and call 'install', this will install the neccessary global functions.
