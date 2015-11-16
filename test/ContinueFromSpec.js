@@ -1,7 +1,7 @@
+/* global continueFrom */
 import '../src/ContinueFrom';
 
 import chai from 'chai';
-import getGlobal from 'get-global';
 
 let expect = chai.expect;
 

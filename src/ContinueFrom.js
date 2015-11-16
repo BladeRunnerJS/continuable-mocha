@@ -4,63 +4,10 @@ let SUITE_TARGET_SEPARATOR = '::';
 
 import sprintf from 'sprintf';
 import getGlobal from 'get-global';
-import Mocha from 'mocha';
 
 const GLOBAL = getGlobal();
 
 let ignoredSuiteTests = [];
-
-let continueFrom = function(target) {
-	let theTest = this;
-	let suite = theTest.parent;
-	let rootSuite = findRootSuite(suite);
-	let matchingTest = locateTest(rootSuite, target);
-
-	if (matchingTest === undefined) {
-		throw new Error( sprintf('Unable to find the test \'%s\'', target) );
-	}
-
-	if (!matchingTest.fn) {
-		throw new Error( sprintf( 'Found the test \'%s\', but it was ignored. Used the continues from \'xit\' function instead.', target) );
-	}
-
-	let oldContextTest = suite.ctx.test;
-	try {
-		matchingTest.ctx.test = matchingTest;
-		matchingTest.fn.call(matchingTest.ctx);
-	} finally {
-		matchingTest.ctx.test = oldContextTest;
-	}
-};
-
-let mochaXit = GLOBAL.xit;
-GLOBAL.xit = function xit(testName, fn) {
-	mochaXit(testName, fn);
-	ignoredSuiteTests[0].set(testName, fn);
-};
-
-let mochaDescribe = GLOBAL.describe;
-GLOBAL.describe = function describe(suiteName, fn) {
-	ignoredSuiteTests.push(new Map());
-
-	let suite = mochaDescribe(suiteName, fn);
-
-	let thisSuiteIgnoredTests = ignoredSuiteTests.pop();
-	thisSuiteIgnoredTests.forEach((testFn, testName) => {
-		locateTest(suite, testName).fn = testFn;
-	});
-
-	suite.beforeEach(function() {
-		GLOBAL.continueFrom = continueFrom.bind(this.test);
-	});
-	suite.afterEach(function() {
-		delete GLOBAL.continueFrom;
-	});
-
-
-	return suite;
-};
-
 
 function locateTest(suite, testName) {
 	let matchingTest;
@@ -88,4 +35,59 @@ function findRootSuite(suite) {
 	}
 	return suite;
 }
+
+function continueFrom(target) {
+	let theTest = this;
+	let suite = theTest.parent;
+	let rootSuite = findRootSuite(suite);
+	let matchingTest = locateTest(rootSuite, target);
+
+	if (matchingTest === undefined) {
+		throw new Error( sprintf('Unable to find the test \'%s\'', target) );
+	}
+
+	if (!matchingTest.fn) {
+		throw new Error( sprintf( 'Found the test \'%s\', but it was ignored. Used the continues from \'xit\' function instead.', target) );
+	}
+
+	let oldContextTest = suite.ctx.test;
+	try {
+		matchingTest.ctx.test = matchingTest;
+		matchingTest.fn.call(matchingTest.ctx);
+	} finally {
+		matchingTest.ctx.test = oldContextTest;
+	}
+}
+
+
+
+let mochaXit = GLOBAL.xit;
+GLOBAL.xit = function xit(testName, fn) {
+	mochaXit(testName, fn);
+	ignoredSuiteTests[0].set(testName, fn);
+};
+
+let mochaDescribe = GLOBAL.describe;
+GLOBAL.describe = function describe(suiteName, fn) {
+	ignoredSuiteTests.push(new Map());
+
+	let suite = mochaDescribe(suiteName, fn);
+
+	let thisSuiteIgnoredTests = ignoredSuiteTests.pop();
+	thisSuiteIgnoredTests.forEach((testFn, testName) => {
+		locateTest(suite, testName).fn = testFn;
+	});
+
+	suite.beforeEach(function() {
+		GLOBAL.continueFrom = continueFrom.bind(this.test);
+	});
+	suite.afterEach(function() {
+		delete GLOBAL.continueFrom;
+	});
+
+	return suite;
+};
+
+
+
 
