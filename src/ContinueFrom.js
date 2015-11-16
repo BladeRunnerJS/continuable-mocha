@@ -5,9 +5,6 @@ let SUITE_TARGET_SEPARATOR = '::';
 import sprintf from 'sprintf';
 import getGlobal from 'get-global';
 
-const GLOBAL = getGlobal();
-
-let isInstalled = false;
 let ignoredSuiteTests = [];
 let mochaXit;
 let mochaDescribe;
@@ -79,25 +76,23 @@ function describe(suiteName, fn) {
 	});
 
 	suite.beforeEach(function() {
-		GLOBAL.continueFrom = continueFrom.bind(this.test);
+		let thisContinueFrom = continueFrom.bind(this.test);
+		getGlobal().continueFrom = thisContinueFrom;
+		this.continueFrom = thisContinueFrom;
 	});
 	suite.afterEach(function() {
 		delete this.continueFrom;
+		delete getGlobal().continueFrom;
 	});
 
 	return suite;
 }
 
-
-(() => {
-	if (isInstalled) {
-		return;
+export default {
+	install: () => {
+		mochaXit = getGlobal().xit;
+		mochaDescribe = getGlobal().describe;
+		getGlobal().xit = xit;
+		getGlobal().describe = describe;
 	}
-	mochaXit = GLOBAL.xit;
-	mochaDescribe = GLOBAL.describe;
-	GLOBAL.xit = xit;
-	GLOBAL.describe = describe;
-	isInstalled = true;
-})();
-
-
+};

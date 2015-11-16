@@ -4,18 +4,21 @@ A small library that allows one Mocha test to 'continue from' another.
 
 ## Usage
 
-Require the `continueable-mocha` library, this will install the neccessary global functions.
+Require the `continueable-mocha` library and call 'install', this will install the neccessary global functions.
 
 ```
-require('continueable-mocha');
+var continueableMocha require('continueable-mocha');
 // or
-import 'continueable-mocha';
+import continueableMocha from 'continueable-mocha';
+
+continueableMocha.install();
 ```
 
 To continue from a test call `continueFrom` providing either the name of the test in the same suite or the full suite and test name separated by `::` characters.
 
 ```
-require('continuable-mocha');
+var continueableMocha = require('continuable-mocha');
+continueableMocha.install();
 
 describe('my suite', function() {
 

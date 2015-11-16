@@ -1,5 +1,7 @@
 /* global continueFrom */
-import '../src/ContinueFrom';
+import ContinueFrom from '../src/ContinueFrom';
+ContinueFrom.install();
+
 import {
 	resetTestsExecuted,
 	currentTestName,
@@ -7,6 +9,7 @@ import {
 	firstTestCalled,
 	firstTestCalled as nextTestCalled
 } from './Utils';
+
 
 import chai from 'chai';
 
