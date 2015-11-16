@@ -1,5 +1,12 @@
 /* global continueFrom */
 import '../src/ContinueFrom';
+import {
+	resetTestsExecuted,
+	currentTestName,
+	recordTest,
+	firstTestCalled,
+	firstTestCalled as nextTestCalled
+} from './Utils';
 
 import chai from 'chai';
 
@@ -7,25 +14,8 @@ let expect = chai.expect;
 
 describe('ContinueFrom', function() {
 
-	let testsExecuted;
-
-	/* utils */
-
-    function currentTestName(that) {
-		return that.test.fullTitle();
-	}
-
-	function recordTest(that) {
-		testsExecuted.push( currentTestName(that) );
-	}
-
-	function firstTestCalled() {
-		return testsExecuted.shift();
-	}
-	var nextTestCalled = firstTestCalled; /* syntactic sugar */
-
 	beforeEach(() => {
-		testsExecuted = [];
+		resetTestsExecuted();
 	});
 
 	it('dummy test 1', function() {
