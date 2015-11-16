@@ -10,9 +10,7 @@ import {
 	firstTestCalled as nextTestCalled
 } from './Utils';
 
-
 import chai from 'chai';
-
 let expect = chai.expect;
 
 describe('ContinueFrom', function() {

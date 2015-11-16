@@ -1,7 +1,7 @@
 
 let testsExecuted = [];
 
-export function resetTestsExecuted(that) {
+export function resetTestsExecuted() {
 	testsExecuted = [];
 }
 

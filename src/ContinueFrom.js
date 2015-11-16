@@ -9,6 +9,17 @@ let ignoredSuiteTests = [];
 let mochaXit;
 let mochaDescribe;
 
+function highestSuiteAncestor(suite) {
+	while(suite.parent && !suite.parent.root) {
+		suite = suite.parent;
+	}
+	return suite;
+}
+
+function rootSuite(suite) {
+	return highestSuiteAncestor(suite).parent;
+}
+
 function locateTest(suite, testName) {
 	let matchingTest;
 	let fullTitleToMatch = testName.replace(new RegExp(SUITE_TARGET_SEPARATOR, 'g'), ' ');
@@ -17,7 +28,7 @@ function locateTest(suite, testName) {
 		fullTitleToMatch = suite.fullTitle() + ' ' + fullTitleToMatch;
 	}
 
-	suite.eachTest((theTest) => {
+	rootSuite(suite).eachTest((theTest) => {
 		if (matchingTest !== undefined) {
 			return;
 		}
@@ -29,18 +40,11 @@ function locateTest(suite, testName) {
 	return matchingTest;
 }
 
-function findRootSuite(suite) {
-	while(suite.parent && !suite.parent.root) {
-		suite = suite.parent;
-	}
-	return suite;
-}
-
 function continueFrom(target) {
 	let theTest = this;
 	let suite = theTest.parent;
-	let rootSuite = findRootSuite(suite);
-	let matchingTest = locateTest(rootSuite, target);
+	let theHighestSuiteAncestor = highestSuiteAncestor(suite);
+	let matchingTest = locateTest(theHighestSuiteAncestor, target);
 
 	if (matchingTest === undefined) {
 		throw new Error( sprintf('Unable to find the test \'%s\'', target) );
