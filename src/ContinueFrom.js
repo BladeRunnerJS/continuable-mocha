@@ -6,6 +6,10 @@ import sprintf from 'sprintf';
 import getGlobal from 'get-global';
 import Mocha from 'mocha';
 
+const GLOBAL = getGlobal();
+
+let ignoredSuiteTests = [];
+
 Mocha.Context.prototype.continueFrom = function(target) {
 	let theTest = this;
 	let suite = theTest.test.parent;
@@ -28,6 +32,27 @@ Mocha.Context.prototype.continueFrom = function(target) {
 		matchingTest.ctx.test = oldContextTest;
 	}
 };
+
+let mochaXit = GLOBAL.xit;
+GLOBAL.xit = function xit(testName, fn) {
+	mochaXit(testName, fn);
+	ignoredSuiteTests[0].set(testName, fn);
+};
+
+let mochaDescribe = GLOBAL.describe;
+GLOBAL.describe = function describe(suiteName, fn) {
+	ignoredSuiteTests.push(new Map());
+
+	let suite = mochaDescribe(suiteName, fn);
+
+	let thisSuiteIgnoredTests = ignoredSuiteTests.pop();
+	thisSuiteIgnoredTests.forEach((testFn, testName) => {
+		locateTest(suite, testName).fn = testFn;
+	});
+
+	return suite;
+};
+
 
 function locateTest(suite, testName) {
 	let matchingTest;
@@ -56,8 +81,3 @@ function findRootSuite(suite) {
 	return suite;
 }
 
-
-export function xit(suite, testName, fn) {
-	getGlobal().xit(testName, fn);
-	locateTest(suite, testName).fn = fn;
-}
