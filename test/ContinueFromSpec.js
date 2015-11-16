@@ -27,6 +27,11 @@ describe('ContinueFrom', function() {
 		recordTest(this);
 	});
 
+	it('dummy test that continues from dummy test 1', function() {
+		continueFrom('dummy test 1');
+		recordTest(this);
+	});
+
 	it('dummy test using arrow functions', () => {
 		// empty test, we cant record it because 'this' isnt the test object with arrow functions
 	});
@@ -45,6 +50,27 @@ describe('ContinueFrom', function() {
 		recordTest(this);
 
 		expect(firstTestCalled()).to.equal('ContinueFrom dummy test 1');
+		expect(nextTestCalled()).to.equal(currentTestName(this));
+	});
+
+	it('can continue from a test that also uses continue from', function() {
+		continueFrom('dummy test that continues from dummy test 1');
+		recordTest(this);
+
+		expect(firstTestCalled()).to.equal('ContinueFrom dummy test 1');
+		expect(nextTestCalled()).to.equal('ContinueFrom dummy test that continues from dummy test 1');
+		expect(nextTestCalled()).to.equal(currentTestName(this));
+	});
+
+	it('can continueFrom multiple times', function() {
+		continueFrom('dummy test that continues from dummy test 1');
+		continueFrom('dummy test that continues from dummy test 1');
+		recordTest(this);
+
+		expect(firstTestCalled()).to.equal('ContinueFrom dummy test 1');
+		expect(nextTestCalled()).to.equal('ContinueFrom dummy test that continues from dummy test 1');
+		expect(firstTestCalled()).to.equal('ContinueFrom dummy test 1');
+		expect(nextTestCalled()).to.equal('ContinueFrom dummy test that continues from dummy test 1');
 		expect(nextTestCalled()).to.equal(currentTestName(this));
 	});
 
