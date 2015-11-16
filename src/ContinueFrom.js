@@ -7,7 +7,10 @@ import getGlobal from 'get-global';
 
 const GLOBAL = getGlobal();
 
+let isInstalled = false;
 let ignoredSuiteTests = [];
+let mochaXit;
+let mochaDescribe;
 
 function locateTest(suite, testName) {
 	let matchingTest;
@@ -60,15 +63,12 @@ function continueFrom(target) {
 }
 
 
-
-let mochaXit = GLOBAL.xit;
-GLOBAL.xit = function xit(testName, fn) {
+function xit(testName, fn) {
 	mochaXit(testName, fn);
 	ignoredSuiteTests[0].set(testName, fn);
-};
+}
 
-let mochaDescribe = GLOBAL.describe;
-GLOBAL.describe = function describe(suiteName, fn) {
+function describe(suiteName, fn) {
 	ignoredSuiteTests.push(new Map());
 
 	let suite = mochaDescribe(suiteName, fn);
@@ -82,12 +82,22 @@ GLOBAL.describe = function describe(suiteName, fn) {
 		GLOBAL.continueFrom = continueFrom.bind(this.test);
 	});
 	suite.afterEach(function() {
-		delete GLOBAL.continueFrom;
+		delete this.continueFrom;
 	});
 
 	return suite;
-};
+}
 
 
+(() => {
+	if (isInstalled) {
+		return;
+	}
+	mochaXit = GLOBAL.xit;
+	mochaDescribe = GLOBAL.describe;
+	GLOBAL.xit = xit;
+	GLOBAL.describe = describe;
+	isInstalled = true;
+})();
 
 
