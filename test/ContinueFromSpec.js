@@ -36,6 +36,10 @@ describe('ContinueFrom', function() {
 		recordTest(this);
 	});
 
+	it('dummy test using arrow functions', () => {
+		// empty test, we cant record it because 'this' isnt the test object with arrow functions
+	});
+
 	/* start functionality tests */
 	it('can continue from a test by its test name only', function() {
 		continueFrom('dummy test 1');
@@ -51,6 +55,18 @@ describe('ContinueFrom', function() {
 
 		expect(firstTestCalled()).to.equal('ContinueFrom dummy test 1');
 		expect(nextTestCalled()).to.equal(currentTestName(this));
+	});
+
+	it('can continue from a test where the continuing test is written using arrow functions', () => {
+		expect(() => {
+			continueFrom('dummy test 1'); // we cant assert the called tests since 'this' isnt the test object using arrow functions
+		}).to.not.error;
+	});
+
+	it('can continue from a test where the continued test is written using arrow functions', () => {
+		expect(() => {
+			continueFrom('dummy test using arrow functions'); // we cant assert the called tests since 'this' isnt the test object using arrow functions
+		}).to.not.error;
 	});
 
 	it('will throw an error if the test cannot be found using the test name', function() {
