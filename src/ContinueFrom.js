@@ -94,9 +94,11 @@ function continuableDescribe(suiteName, fn) {
 
 export default {
 	install: () => {
-		mochaXit = global.xit;
-		mochaDescribe = global.describe;
-		global.xit = continuableXit;
-		global.describe = continuableDescribe;
+		if(global.xit !== continuableXit){
+			mochaXit = global.xit;
+			mochaDescribe = global.describe;
+			global.xit = continuableXit;
+			global.describe = continuableDescribe;
+		}
 	}
 };
