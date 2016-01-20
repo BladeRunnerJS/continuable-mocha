@@ -8,21 +8,21 @@ A small library that allows one Mocha test to 'continue from' another.
 
 ## Usage
 
-Require the `continueable-mocha` library and call 'install', this will install the neccessary global functions.
+Require the `continuable-mocha` library and call 'install', this will install the necessary global functions.
 
 ```
-var continueableMocha require('continueable-mocha');
+var continuableMocha require('continuable-mocha');
 // or
-import continueableMocha from 'continueable-mocha';
+import continuableMocha from 'continuable-mocha';
 
-continueableMocha.install();
+continuableMocha.install();
 ```
 
 To continue from a test call `continueFrom` providing either the name of the test in the same suite or the full suite and test name separated by `::` characters.
 
 ```
-var continueableMocha = require('continuable-mocha');
-continueableMocha.install();
+var continuableMocha = require('continuable-mocha');
+continuableMocha.install();
 
 describe('my suite', function() {
 
@@ -72,4 +72,4 @@ describe('my suite', function() {
 ## Development
 
 - the source code is in `src`
-- tests are in `test`. Run default tests command via `npm test`. `npm run test:node:debug` or `npm run test:browser:debug` can be used to start a persistant test process which watches the director.
+- tests are in `test`. Run default tests command via `npm test`. `npm run test:node:debug` or `npm run test:browser:debug` can be used to start a persistent test process which watches the director.
