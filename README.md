@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/BladeRunnerJS/continuable-mocha.png)](https://travis-ci.org/BladeRunnerJS/continuable-mocha)
+
 # Continuable Mocha
 
 A small library that allows one Mocha test to 'continue from' another.
