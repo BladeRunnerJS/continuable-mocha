@@ -3,7 +3,7 @@
 let SUITE_TARGET_SEPARATOR = '::';
 
 import sprintf from 'sprintf';
-import getGlobal from 'get-global';
+
 
 let ignoredSuiteTests = [];
 let mochaXit;
@@ -81,12 +81,12 @@ function describe(suiteName, fn) {
 
 	suite.beforeEach(function() {
 		let thisContinueFrom = continueFrom.bind(this.test);
-		getGlobal().continueFrom = thisContinueFrom;
+		global.continueFrom = thisContinueFrom;
 		this.continueFrom = thisContinueFrom;
 	});
 	suite.afterEach(function() {
 		delete this.continueFrom;
-		delete getGlobal().continueFrom;
+		delete global.continueFrom;
 	});
 
 	return suite;
@@ -94,9 +94,9 @@ function describe(suiteName, fn) {
 
 export default {
 	install: () => {
-		mochaXit = getGlobal().xit;
-		mochaDescribe = getGlobal().describe;
-		getGlobal().xit = xit;
-		getGlobal().describe = describe;
+		mochaXit = global.xit;
+		mochaDescribe = global.describe;
+		global.xit = xit;
+		global.describe = describe;
 	}
 };
