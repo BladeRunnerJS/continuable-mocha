@@ -1,4 +1,5 @@
 // multiple nested describes
+/* global global */
 
 let SUITE_TARGET_SEPARATOR = '::';
 
