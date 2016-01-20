@@ -64,12 +64,12 @@ function continueFrom(target) {
 }
 
 
-function xit(testName, fn) {
+function continuableXit(testName, fn) {
 	mochaXit(testName, fn);
 	ignoredSuiteTests[0].set(testName, fn);
 }
 
-function describe(suiteName, fn) {
+function continuableDescribe(suiteName, fn) {
 	ignoredSuiteTests.push(new Map());
 
 	let suite = mochaDescribe(suiteName, fn);
@@ -96,7 +96,7 @@ export default {
 	install: () => {
 		mochaXit = global.xit;
 		mochaDescribe = global.describe;
-		global.xit = xit;
-		global.describe = describe;
+		global.xit = continuableXit;
+		global.describe = continuableDescribe;
 	}
 };
